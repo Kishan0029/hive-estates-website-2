@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, MapPin, Grid, Phone, Share2, Heart, BedDouble, Bath, Square, ShieldCheck, FileText, Check, X } from "lucide-react";
+import { MapPin, Grid, Phone, Share2, Heart, BedDouble, Bath, Square, ShieldCheck, FileText, Check, X } from "lucide-react";
 import { landListings, homeListings, justAddedListings } from "../data/listings";
 import { PropertyCard } from "../components/PropertyCard";
 
@@ -232,20 +232,34 @@ export function PropertyDetailPage() {
               </div>
             </div>
 
-            {/* Map Placeholder */}
+            {/* Map Placeholder (Approximate Location) */}
             <div>
-               <h2 className="text-2xl font-bold text-hive-ink mb-4">Location</h2>
-               <div className="w-full h-[300px] rounded-[24px] bg-neutral-100 border border-neutral-200 overflow-hidden relative">
+               <h2 className="text-2xl font-bold text-hive-ink mb-2">Location</h2>
+               <p className="text-neutral-500 mb-6">Exact location provided after booking/request.</p>
+               <div className="w-full h-[350px] rounded-[32px] bg-neutral-100 border border-neutral-200 overflow-hidden relative group">
+                  {/* Google Map Background */}
                   <iframe 
-                    src="https://maps.google.com/maps?q=15.843344192455298,74.49440617116439&z=14&output=embed" 
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(listing.location + ", Belagavi")}&z=14&output=embed&z=13&iwloc=near`} 
                     width="100%" 
                     height="100%" 
                     style={{ border: 0 }} 
                     allowFullScreen={true} 
                     loading="lazy" 
-                    className="absolute inset-0 grayscale hover:grayscale-0 transition-all duration-700"
-                    title="Location Map"
+                    className="absolute inset-0 grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 pointer-events-none"
+                    title="Approximate Location Map"
                   ></iframe>
+                  
+                  {/* Airbnb Style Approximate Zone Overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                     <div className="relative flex items-center justify-center">
+                        {/* Outer pulsating ring */}
+                        <div className="absolute w-40 h-40 bg-hive-ink/10 rounded-full animate-ping" style={{ animationDuration: '3s' }}></div>
+                        {/* Inner approximate zone */}
+                        <div className="w-32 h-32 bg-hive-ink/20 border-2 border-hive-ink/50 rounded-full backdrop-blur-[2px] flex items-center justify-center shadow-lg">
+                           <MapPin className="w-6 h-6 text-hive-ink opacity-70" />
+                        </div>
+                     </div>
+                  </div>
                </div>
             </div>
 
