@@ -1,14 +1,12 @@
 
 
 const MARQUEE_ITEMS = [
-  "Hive Verified",
+  "Hive Verified - Clear Titles",
   "Apartments",
   "Bungalows",
   "Land & Plots",
   "Belagavi",
   "Direct Owner Contact",
-  "Zero Brokerage Games",
-  "Clear Titles",
 ];
 
 export function MarqueeBanner() {
