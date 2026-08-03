@@ -111,7 +111,7 @@ export function HeroSection() {
 
         {/* Headline */}
         <h1
-          className="text-white font-extrabold tracking-tighter leading-[1.02] text-4xl sm:text-5xl lg:text-[5.5rem] max-w-4xl"
+          className="mt-16 text-white font-extrabold tracking-tighter leading-[1.02] text-4xl sm:text-5xl lg:text-[5.5rem] max-w-4xl"
           aria-label="Find your perfect home in Belagavi."
           style={{ opacity: 1 }}
         >
