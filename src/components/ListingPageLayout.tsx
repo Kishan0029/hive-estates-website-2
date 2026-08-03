@@ -49,22 +49,30 @@ export function ListingPageLayout({
         {/* Mobile Filter Toggle */}
         <button
           onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-          className="md:hidden w-full flex items-center justify-center gap-2 bg-white border border-neutral-200 rounded-xl py-3 mb-6 font-semibold text-neutral-700 shadow-sm"
+          className="lg:hidden w-full flex items-center justify-center gap-2 bg-white border border-neutral-200 rounded-xl py-3 mb-6 font-semibold text-neutral-700 shadow-sm hover:bg-neutral-50 transition-colors"
         >
           <SlidersHorizontalIcon className="w-4 h-4" />
           {mobileFiltersOpen ? "Hide Filters" : "Show Filters"}
         </button>
 
-        <div className="flex flex-col md:flex-row gap-8 items-start">
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
           {/* Sidebar */}
           <aside
             className={`${
               mobileFiltersOpen ? "block" : "hidden"
-            } md:block w-full md:w-[280px] shrink-0 bg-white border border-neutral-200 rounded-[24px] p-6 sticky top-24 shadow-sm`}
+            } lg:block w-full lg:w-[280px] shrink-0 bg-white border border-neutral-200 rounded-[24px] p-6 mb-8 lg:mb-0 static lg:sticky lg:top-28 z-40 shadow-sm`}
           >
-            <div className="flex items-center gap-2 mb-6 pb-4 border-b border-neutral-100">
-              <SlidersHorizontalIcon className="w-4 h-4 text-neutral-400" />
-              <h2 className="font-bold text-hive-ink">Filters</h2>
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-neutral-100">
+              <div className="flex items-center gap-2">
+                <SlidersHorizontalIcon className="w-4 h-4 text-neutral-400" />
+                <h2 className="font-bold text-hive-ink">Filters</h2>
+              </div>
+              <button
+                onClick={() => setMobileFiltersOpen(false)}
+                className="lg:hidden text-xs font-semibold text-neutral-500 hover:text-hive-ink transition-colors"
+              >
+                Close
+              </button>
             </div>
             {sidebar}
           </aside>
