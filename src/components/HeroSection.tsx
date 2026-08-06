@@ -1,4 +1,6 @@
 
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ModernSelect } from "./ModernSelect";
 
 const HouseIcon = () => (
@@ -87,6 +89,33 @@ const POPULAR_AREAS = [
 ];
 
 export function HeroSection() {
+  const navigate = useNavigate();
+  const [lookingFor, setLookingFor] = useState("Buy");
+  const [propertyType, setPropertyType] = useState("Apartment");
+  const [locality, setLocality] = useState("Tilakwadi");
+  const [priceRange, setPriceRange] = useState("Any budget");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const isLand = propertyType === "Land / Plot";
+    const path = isLand ? "/land" : "/apartments";
+    const params = new URLSearchParams();
+    
+    if (locality) params.set("search", locality);
+    
+    // Map Hero budget to Page budget
+    if (priceRange === "Under ₹50 L") params.set("budget", "Under ₹50 L");
+    else if (priceRange === "₹50 L – ₹1 Cr") params.set("budget", "Under ₹1 Cr");
+    else if (priceRange === "Above ₹1 Cr") params.set("budget", "Any"); // Close enough for now
+    
+    if (!isLand) {
+      if (propertyType === "Bungalow") params.set("type", "Bungalow");
+      else if (propertyType === "Apartment") params.set("type", "Apartment");
+    }
+
+    navigate(`${path}?${params.toString()}`);
+  };
+
   return (
     <section
       id="home"
@@ -137,14 +166,14 @@ export function HeroSection() {
 
         {/* Popular area pills */}
         <div className="mt-7 flex flex-wrap items-center gap-2.5">
-          <span className="text-xs font-semibold uppercase tracking-widest text-white/50 mr-1">
+          <span className="text-xs font-bold uppercase tracking-widest text-white mr-2 drop-shadow-md">
             Popular
           </span>
           {POPULAR_AREAS.map((area) => (
             <a
               key={area}
               href="#"
-              className="rounded-full border border-white/25 bg-white/5 backdrop-blur px-3.5 py-1.5 text-sm text-white/90 hover:bg-white hover:text-hive-ink transition-colors duration-200"
+              className="rounded-full border-2 border-white/60 bg-black/40 backdrop-blur-md px-4 py-1.5 text-sm font-semibold text-white shadow-lg hover:bg-white hover:text-hive-ink hover:border-white transition-all duration-300"
             >
               {area}
             </a>
@@ -152,10 +181,10 @@ export function HeroSection() {
         </div>
 
         {/* Category cards */}
-        <div className="mt-9 flex flex-col sm:flex-row gap-4 max-w-lg">
+        <div className="mt-10 flex flex-col sm:flex-row gap-5 max-w-2xl">
           <a
             href="#"
-            className="group relative flex-1 min-h-[130px] rounded-[22px] overflow-hidden"
+            className="group relative flex-1 min-h-[180px] rounded-[22px] overflow-hidden"
           >
             <img
               alt="Apartments & Bungalows"
@@ -188,7 +217,7 @@ export function HeroSection() {
           </a>
           <a
             href="#"
-            className="group relative flex-1 min-h-[130px] rounded-[22px] overflow-hidden"
+            className="group relative flex-1 min-h-[180px] rounded-[22px] overflow-hidden"
           >
             <img
               alt="Land & Plots"
@@ -228,7 +257,7 @@ export function HeroSection() {
 
       {/* Floating search form */}
       <div className="absolute left-1/2 -translate-x-1/2 -bottom-36 md:-bottom-16 z-20 w-[92%] max-w-5xl">
-        <form className="bg-white rounded-[28px] p-3 md:p-4 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.35)] border border-neutral-100">
+        <form onSubmit={handleSearch} className="bg-white rounded-[28px] p-3 md:p-4 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.35)] border border-neutral-100">
           <div className="grid grid-cols-2 md:grid-cols-[1.1fr_1fr_1fr_1fr_auto] gap-0 items-center">
             <ModernSelect
               label="Looking for"
@@ -236,6 +265,8 @@ export function HeroSection() {
               options={["Buy", "Rent"]}
               icon={<HouseIcon />}
               className="border-b md:border-b-0 border-r md:border-r"
+              value={lookingFor}
+              onChange={setLookingFor}
             />
             <ModernSelect
               label="Property type"
@@ -243,6 +274,8 @@ export function HeroSection() {
               options={["Apartment", "Bungalow", "Land / Plot"]}
               icon={<LandmarkIcon />}
               className="border-b md:border-b-0 md:border-r"
+              value={propertyType}
+              onChange={setPropertyType}
             />
             <ModernSelect
               label="Locality"
@@ -250,6 +283,8 @@ export function HeroSection() {
               options={POPULAR_AREAS}
               icon={<MapPinIcon />}
               className="border-r md:border-r"
+              value={locality}
+              onChange={setLocality}
             />
             <ModernSelect
               label="Price range"
@@ -257,6 +292,8 @@ export function HeroSection() {
               options={["Any budget", "Under ₹50 L", "₹50 L – ₹1 Cr", "Above ₹1 Cr"]}
               icon={<TrendingUpIcon />}
               className="md:border-r"
+              value={priceRange}
+              onChange={setPriceRange}
             />
             <div className="col-span-2 md:col-span-1 p-2 md:pl-3 pt-3 md:pt-2">
               <button

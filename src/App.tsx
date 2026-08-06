@@ -8,6 +8,7 @@ import { LandPage } from "./pages/LandPage";
 import { ContactPage } from "./pages/ContactPage";
 import { AboutPage } from "./pages/AboutPage";
 import { PropertyDetailPage } from "./pages/PropertyDetailPage";
+import { PostPropertyPage } from "./pages/PostPropertyPage";
 import { PageTransition } from "./components/PageTransition";
 
 // Admin pages
@@ -38,6 +39,7 @@ function PublicLayout() {
           <Route path="/apartments" element={<ApartmentsPage />} />
           <Route path="/land" element={<LandPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/post-property" element={<PostPropertyPage />} />
           <Route path="/property/:slug" element={<PropertyDetailPage />} />
         </Routes>
       </PageTransition>

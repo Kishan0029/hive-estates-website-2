@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { ListingPageLayout, FilterGroup, FilterRadio } from "../components/ListingPageLayout";
 import { PropertyCard } from "../components/PropertyCard";
 import { useQuery } from "@tanstack/react-query";
@@ -21,11 +22,12 @@ const BUDGET_LIMITS: Record<string, number> = {
 };
 
 export function LandPage() {
-  const [search, setSearch] = useState("");
+  const [searchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("search") || "");
   const [propertyType, setPropertyType] = useState("All");
   const [naStatus, setNaStatus] = useState("Any");
   const [ownership, setOwnership] = useState("Any");
-  const [budget, setBudget] = useState("Any");
+  const [budget, setBudget] = useState(searchParams.get("budget") || "Any");
 
   const { data: allLand = [], isLoading } = useQuery({
     queryKey: ['properties', 'land'],
@@ -46,8 +48,8 @@ export function LandPage() {
       
       // Property Type
       if (propertyType !== "All") {
-        if (propertyType === "NA Plot" && !isNA) return false;
-        if (propertyType === "Non-NA Plot" && isNA) return false;
+        if (propertyType === "Plot" && listing.type !== "Land") return false;
+        if (propertyType === "Farm Land" && listing.type !== "Farm Land") return false;
       }
       
       // NA Status
@@ -77,7 +79,7 @@ export function LandPage() {
   const sidebar = (
     <>
       <FilterGroup title="Property Type">
-        {["All", "NA Plot", "Non-NA Plot"].map((pt) => (
+        {["All", "Plot", "Farm Land"].map((pt) => (
           <FilterRadio key={pt} label={pt} name="ptype" value={pt} checked={propertyType === pt} onChange={setPropertyType} />
         ))}
       </FilterGroup>

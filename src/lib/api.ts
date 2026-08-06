@@ -30,7 +30,7 @@ function mapDbToFrontendProperty(row: any): Listing {
   const images = row.property_images?.sort((a: any, b: any) => a.sort_order - b.sort_order) || [];
   const imageUrl = images.length > 0 ? resolveImageUrl(images[0].r2_key) : "/land-placeholder-1.png";
 
-  const type = (row.property_type === "villa" ? "Bungalow" : row.property_type === "apartment" ? "Apartment" : "Land") as any;
+  const type = (row.property_type === "villa" ? "Bungalow" : row.property_type === "apartment" ? "Apartment" : row.property_type === "farmland" ? "Farm Land" : "Land") as any;
 
   const specs: string[] = [];
   if (type !== "Land") {
@@ -78,7 +78,7 @@ export async function getPropertiesByCategory(category: "home" | "land"): Promis
   if (category === "home") {
     query = query.in("property_type", ["villa", "apartment"]);
   } else if (category === "land") {
-    query = query.eq("property_type", "plot");
+    query = query.in("property_type", ["plot", "farmland"]);
   }
 
   const { data, error } = await query.order("created_at", { ascending: false });

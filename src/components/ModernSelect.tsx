@@ -6,6 +6,8 @@ interface ModernSelectProps {
   options: string[];
   defaultOption: string;
   className?: string;
+  value?: string;
+  onChange?: (val: string) => void;
 }
 
 export function ModernSelect({
@@ -14,10 +16,19 @@ export function ModernSelect({
   options,
   defaultOption,
   className = "",
+  value,
+  onChange,
 }: ModernSelectProps) {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(defaultOption);
+  const [internalSelected, setInternalSelected] = useState(defaultOption);
   const ref = useRef<HTMLDivElement>(null);
+  
+  const selected = value !== undefined ? value : internalSelected;
+  const handleSelect = (val: string) => {
+    if (onChange) onChange(val);
+    setInternalSelected(val);
+    setOpen(false);
+  };
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -68,10 +79,7 @@ export function ModernSelect({
           {options.map((opt) => (
             <div
               key={opt}
-              onClick={() => {
-                setSelected(opt);
-                setOpen(false);
-              }}
+              onClick={() => handleSelect(opt)}
               className={`px-4 py-2.5 text-sm transition-colors flex items-center justify-between cursor-pointer ${
                 selected === opt
                   ? "bg-neutral-100 font-bold text-neutral-900"

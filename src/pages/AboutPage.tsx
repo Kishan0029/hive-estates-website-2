@@ -34,10 +34,10 @@ export function AboutPage() {
             About Hive Estates
           </span>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tighter text-hive-ink leading-[1.05]">
-            Redefining real estate in Belagavi.
+            Built on Trust. Made for Belgaum.
           </h1>
           <p className="mt-6 text-lg text-neutral-500 leading-relaxed">
-            We are a premium real estate advisory firm dedicated to helping you find your dream home or perfect investment. With local expertise and a global standard of service, we make property transactions seamless.
+            We are a transparent, trusted, and one-stop real estate solution for Belgaum. We are dedicated to helping you find your dream home or perfect investment with local expertise and a global standard of service.
           </p>
         </div>
 

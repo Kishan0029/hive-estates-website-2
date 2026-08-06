@@ -3,7 +3,6 @@ import { MarqueeBanner } from "../components/MarqueeBanner";
 import { FeaturedLand } from "../components/FeaturedLand";
 import { FeaturedHomes } from "../components/FeaturedHomes";
 import { JustAdded } from "../components/JustAdded";
-import { Neighbourhoods } from "../components/Neighbourhoods";
 import { WhyHive } from "../components/WhyHive";
 import { FAQSection } from "../components/FAQSection";
 
@@ -16,7 +15,6 @@ export function HomePage() {
         <FeaturedLand />
         <FeaturedHomes />
         <JustAdded />
-        <Neighbourhoods />
         <WhyHive />
         <FAQSection />
       </main>

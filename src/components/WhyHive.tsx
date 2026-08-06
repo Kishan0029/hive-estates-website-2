@@ -109,11 +109,10 @@ export function WhyHive() {
             Why Hive Estates
           </span>
           <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tighter text-hive-ink leading-[1.05]">
-            Built on one thing: trust
+            Built on Trust. Made for Belgaum.
           </h2>
           <p className="mt-4 text-lg text-neutral-500 leading-relaxed">
-            We obsess over verification so you never have to second-guess a
-            listing again.
+            We are a transparent, trusted, and one-stop real estate solution for Belgaum.
           </p>
         </div>
       </div>
@@ -137,6 +136,31 @@ export function WhyHive() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Hive Verified Context Banner */}
+      <div className="mt-16 bg-neutral-900 rounded-[2.5rem] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-10 overflow-hidden relative border border-neutral-800">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-hive-green/20 rounded-full blur-3xl" />
+        
+        <div className="relative z-10 max-w-3xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-hive-green/20 text-hive-green font-bold text-xs uppercase tracking-widest rounded-full mb-6">
+            <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+            Hive Verified
+          </div>
+          <h3 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-4 leading-tight">
+            Trust Begins with Verification.
+          </h3>
+          <p className="text-white/70 text-lg leading-relaxed max-w-2xl">
+            At Hive, we believe every property transaction should start with trust. The Hive Verified badge identifies listings where essential property documents have been reviewed, giving buyers added confidence and providing sellers with increased credibility.
+          </p>
+        </div>
+        
+        <div className="relative z-10 shrink-0 hidden md:block">
+          <div className="w-32 h-32 md:w-40 md:h-40 bg-white/5 border border-white/10 rounded-full flex items-center justify-center backdrop-blur-md shadow-2xl relative">
+            <div className="absolute inset-0 bg-hive-green/10 rounded-full animate-pulse" />
+            <svg width={56} height={56} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="text-hive-green relative z-10"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-4" /></svg>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { ListingPageLayout, FilterGroup, FilterRadio } from "../components/ListingPageLayout";
 import { PropertyCard } from "../components/PropertyCard";
 import { useQuery } from "@tanstack/react-query";
@@ -21,10 +22,11 @@ const BUDGET_LIMITS: Record<string, number> = {
 };
 
 export function ApartmentsPage() {
-  const [search, setSearch] = useState("");
-  const [propertyType, setPropertyType] = useState("All");
+  const [searchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [propertyType, setPropertyType] = useState(searchParams.get("type") || "All");
   const [bhk, setBhk] = useState("Any");
-  const [budget, setBudget] = useState("Any");
+  const [budget, setBudget] = useState(searchParams.get("budget") || "Any");
 
   const { data: allHomes = [], isLoading } = useQuery({
     queryKey: ['properties', 'home'],

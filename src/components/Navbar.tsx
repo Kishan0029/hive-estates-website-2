@@ -57,7 +57,7 @@ export function Navbar() {
         <div className="flex items-center gap-2 shrink-0">
           <LanguageSelector />
           <Link
-            to="/contact"
+            to="/post-property"
             className="hidden sm:inline-flex items-center bg-neutral-900 hover:bg-neutral-800 text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors duration-200 shadow-sm"
           >
             Post Property
@@ -127,7 +127,7 @@ export function Navbar() {
           </div>
           <div className="border-t border-neutral-200 pt-3 flex flex-col sm:hidden gap-2">
             <Link
-              to="/contact"
+              to="/post-property"
               onClick={() => setMobileOpen(false)}
               className="w-full text-center bg-neutral-900 hover:bg-neutral-800 text-white font-semibold py-3 rounded-xl transition-colors"
             >

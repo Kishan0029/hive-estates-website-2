@@ -1,16 +1,38 @@
 import { useState, useRef, useEffect } from 'react';
 
 const LANGUAGES = [
-  { code: "English", label: "English" },
-  { code: "मराठी", label: "मराठी" },
-  { code: "ಕನ್ನಡ", label: "ಕನ್ನಡ" },
-  { code: "हिंदी", label: "हिंदी" },
+  { code: "en", label: "English" },
+  { code: "mr", label: "मराठी" },
+  { code: "kn", label: "ಕನ್ನಡ" },
+  { code: "hi", label: "हिंदी" },
 ];
 
 export function LanguageSelector() {
   const [open, setOpen] = useState(false);
-  const [lang, setLang] = useState("English");
+  
+  const getInitialLang = () => {
+    const match = document.cookie.match(/googtrans=\/en\/([a-z]{2})/);
+    const code = match ? match[1] : "en";
+    const found = LANGUAGES.find(l => l.code === code);
+    return found ? found.label : "English";
+  };
+
+  const [lang, setLang] = useState(getInitialLang());
   const ref = useRef<HTMLDivElement>(null);
+
+  const handleSelect = (item: { code: string; label: string }) => {
+    setLang(item.label);
+    setOpen(false);
+    
+    if (item.code === "en") {
+      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
+    } else {
+      document.cookie = `googtrans=/en/${item.code}; path=/`;
+      document.cookie = `googtrans=/en/${item.code}; path=/; domain=${window.location.hostname}`;
+    }
+    window.location.reload();
+  };
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -23,7 +45,7 @@ export function LanguageSelector() {
   }, []);
 
   return (
-    <div className="relative inline-block text-left" ref={ref}>
+    <div className="notranslate relative inline-block text-left" ref={ref}>
       <button
         type="button"
         onClick={() => setOpen(!open)}
@@ -68,10 +90,7 @@ export function LanguageSelector() {
             <button
               key={item.code}
               type="button"
-              onClick={() => {
-                setLang(item.label);
-                setOpen(false);
-              }}
+              onClick={() => handleSelect(item)}
               className={`w-full text-left px-4 py-2 text-sm transition-colors flex items-center justify-between ${
                 lang === item.label
                   ? "bg-neutral-100 font-bold text-neutral-900"

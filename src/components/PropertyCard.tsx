@@ -9,14 +9,14 @@ interface PropertyCardProps {
 
 export function PropertyCard({ listing, carousel = false }: PropertyCardProps) {
   const cardClass = carousel
-    ? "snap-start shrink-0 w-[calc(100vw-40px)] sm:w-[340px] lg:w-[calc(33.3333%-16px)]"
-    : "";
+    ? "snap-start shrink-0 w-[calc(100vw-40px)] sm:w-[340px] lg:w-[calc(33.3333%-16px)] h-full"
+    : "h-full";
 
   return (
     <div className={cardClass}>
       <Link
         to={`/property/${listing.slug || listing.id}`}
-        className="group block bg-white rounded-[24px] border border-neutral-200/70 overflow-hidden transition-all duration-500 hover:shadow-[0_24px_50px_-20px_rgba(0,0,0,0.18)] hover:-translate-y-1"
+        className="group flex flex-col h-full bg-white rounded-[24px] border border-neutral-200/70 overflow-hidden transition-all duration-500 hover:shadow-[0_24px_50px_-20px_rgba(0,0,0,0.18)] hover:-translate-y-1"
       >
         <div className="relative w-full aspect-[4/3] overflow-hidden">
           <img
@@ -34,7 +34,7 @@ export function PropertyCard({ listing, carousel = false }: PropertyCardProps) {
             {listing.type}
           </span>
         </div>
-        <div className="p-6 flex flex-col gap-2">
+        <div className="p-6 flex flex-col gap-2 flex-grow">
           <div className="flex items-baseline justify-between gap-3">
             <span className="text-2xl font-extrabold tracking-tight text-hive-ink">
               {listing.price}

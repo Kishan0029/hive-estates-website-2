@@ -15,7 +15,7 @@ const schema = z.object({
   listing_number: z.string().optional().nullable(),
   title: z.string().min(5, "Title must be at least 5 characters"),
   slug: z.string().min(3, "Slug is required"),
-  property_type: z.enum(["apartment", "villa", "plot", "commercial"]),
+  property_type: z.enum(["apartment", "villa", "plot", "farmland", "commercial"]),
   listing_type: z.enum(["sale", "rent"]),
   price: optionalNumber,
   area_sqft: optionalNumber,
@@ -216,7 +216,8 @@ export function AdminEditPropertyPage() {
               <select {...register("property_type")} className={inputCls}>
                 <option value="apartment">Apartment</option>
                 <option value="villa">Bungalow / Villa</option>
-                <option value="plot">Plot / Land</option>
+                <option value="plot">Plot</option>
+                <option value="farmland">Farm Land</option>
                 <option value="commercial">Commercial</option>
               </select>
             </div>
@@ -248,7 +249,7 @@ export function AdminEditPropertyPage() {
         {/* Specifications */}
         <SectionCard title="Property Specifications">
           <div className="grid md:grid-cols-3 gap-6">
-            {propertyType === "plot" && (
+            {(propertyType === "plot" || propertyType === "farmland") && (
               <>
                 <div><Label>NA Status</Label><select {...register("na_status")} className={inputCls}><option value="">Select...</option><option value="NA Approved">NA Approved</option><option value="Non-NA">Non-NA</option></select></div>
                 <div><Label>Dimensions</Label><input {...register("dimensions")} className={inputCls} /></div>
