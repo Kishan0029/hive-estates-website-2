@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { Listing } from "../data/listings";
+import type { Listing } from "../lib/api";
 
 interface PropertyCardProps {
   listing: Listing;
@@ -15,7 +15,7 @@ export function PropertyCard({ listing, carousel = false }: PropertyCardProps) {
   return (
     <div className={cardClass}>
       <Link
-        to={`/property/${listing.id}`}
+        to={`/property/${listing.slug || listing.id}`}
         className="group block bg-white rounded-[24px] border border-neutral-200/70 overflow-hidden transition-all duration-500 hover:shadow-[0_24px_50px_-20px_rgba(0,0,0,0.18)] hover:-translate-y-1"
       >
         <div className="relative w-full aspect-[4/3] overflow-hidden">

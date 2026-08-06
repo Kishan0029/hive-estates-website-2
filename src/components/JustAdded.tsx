@@ -1,6 +1,7 @@
 
 import { PropertyCard } from "./PropertyCard";
-import { justAddedListings } from "../data/listings";
+import { useQuery } from "@tanstack/react-query";
+import { getPublicProperties } from "../lib/api";
 
 const ArrowUpRight = () => (
   <svg
@@ -22,6 +23,14 @@ const ArrowUpRight = () => (
 );
 
 export function JustAdded() {
+  const { data: justAddedListings = [], isLoading } = useQuery({
+    queryKey: ['properties', 'all'],
+    queryFn: () => getPublicProperties()
+  });
+  
+  // Just show top 6 for "Just Added"
+  const displayListings = justAddedListings.slice(0, 6);
+
   return (
     <section className="max-w-7xl mx-auto px-5 py-20 md:py-28">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
@@ -44,9 +53,13 @@ export function JustAdded() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        {justAddedListings.map((listing) => (
-          <PropertyCard key={listing.id} listing={listing} />
-        ))}
+        {isLoading ? (
+          <div className="col-span-full text-center py-10 text-neutral-500">Loading...</div>
+        ) : (
+          displayListings.map((listing) => (
+            <PropertyCard key={listing.id} listing={listing} />
+          ))
+        )}
       </div>
     </section>
   );

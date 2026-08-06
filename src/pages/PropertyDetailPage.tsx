@@ -2,18 +2,35 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useParams, Link } from "react-router-dom";
 import { MapPin, Grid, Phone, Share2, Heart, BedDouble, Bath, Square, ShieldCheck, FileText, Check, X } from "lucide-react";
-import { landListings, homeListings, justAddedListings } from "../data/listings";
+import { useQuery } from "@tanstack/react-query";
+import { getPublicPropertyBySlug, getPropertiesByCategory } from "../lib/api";
 import { PropertyCard } from "../components/PropertyCard";
 
 export function PropertyDetailPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [showGallery, setShowGallery] = useState(false);
   
-  // Find listing
-  const allListings = [...landListings, ...homeListings, ...justAddedListings];
-  const listing = allListings.find(l => l.id === id);
+  const { data: listing, isLoading, error } = useQuery({
+    queryKey: ['property', slug],
+    queryFn: () => getPublicPropertyBySlug(slug as string),
+    enabled: !!slug
+  });
 
-  if (!listing) {
+  const { data: similarListings = [] } = useQuery({
+    queryKey: ['properties', listing?.type === 'Land' ? 'land' : 'home'],
+    queryFn: () => getPropertiesByCategory(listing?.type === 'Land' ? 'land' : 'home'),
+    enabled: !!listing
+  });
+
+  if (isLoading) {
+    return (
+      <div className="pt-32 pb-20 text-center min-h-screen">
+        <h1 className="text-3xl font-bold text-neutral-500">Loading...</h1>
+      </div>
+    );
+  }
+
+  if (error || !listing) {
     return (
       <div className="pt-32 pb-20 text-center min-h-screen">
         <h1 className="text-3xl font-bold">Listing not found</h1>
@@ -51,10 +68,10 @@ export function PropertyDetailPage() {
   };
 
   // Helper to extract a number from the ID or generate one
-  const listingNumber = id?.replace(/\D/g, "") + "823";
+  const listingNumber = listing?.id?.replace(/\D/g, "").slice(0, 4) || "8234";
 
   // Find similar properties
-  const similarProperties = allListings
+  const similarProperties = similarListings
     .filter(l => l.type === listing.type && l.id !== listing.id)
     .slice(0, 3);
 

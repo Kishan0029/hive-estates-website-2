@@ -2,7 +2,8 @@
 import { useDraggableCarousel } from "../hooks/useDraggableCarousel";
 import { PropertyCard } from "./PropertyCard";
 import { CarouselArrow } from "./DraggableCarousel";
-import { homeListings } from "../data/listings";
+import { useQuery } from "@tanstack/react-query";
+import { getPropertiesByCategory } from "../lib/api";
 
 const ArrowUpRight = () => (
   <svg
@@ -25,6 +26,10 @@ const ArrowUpRight = () => (
 
 export function FeaturedHomes() {
   const { ref, handlers, scrollNext, scrollPrev } = useDraggableCarousel();
+  const { data: homeListings = [], isLoading } = useQuery({
+    queryKey: ['properties', 'home'],
+    queryFn: () => getPropertiesByCategory('home')
+  });
 
   return (
     <section className="bg-[#FAFAFA] border-y border-neutral-200">
@@ -64,9 +69,13 @@ export function FeaturedHomes() {
           {...handlers}
           className="scroll-container flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4 -mx-5 px-5 md:mx-0 md:px-0 scroll-pl-5 md:scroll-pl-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing select-none"
         >
-          {homeListings.map((listing) => (
-            <PropertyCard key={listing.id} listing={listing} carousel />
-          ))}
+          {isLoading ? (
+            <div className="w-full text-center py-10 text-neutral-500">Loading...</div>
+          ) : (
+            homeListings.map((listing) => (
+              <PropertyCard key={listing.id} listing={listing} carousel />
+            ))
+          )}
         </div>
       </div>
     </section>

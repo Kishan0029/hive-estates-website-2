@@ -1,11 +1,8 @@
 import { useState, useMemo } from "react";
 import { ListingPageLayout, FilterGroup, FilterRadio } from "../components/ListingPageLayout";
 import { PropertyCard } from "../components/PropertyCard";
-import { landListings, justAddedListings } from "../data/listings";
-
-const ALL_LAND = [...landListings, ...justAddedListings].filter(
-  (l) => l.type === "Land"
-);
+import { useQuery } from "@tanstack/react-query";
+import { getPropertiesByCategory } from "../lib/api";
 
 function parsePrice(priceStr: string) {
   const clean = priceStr.replace(/[^0-9.CrL]/g, "");
@@ -30,8 +27,13 @@ export function LandPage() {
   const [ownership, setOwnership] = useState("Any");
   const [budget, setBudget] = useState("Any");
 
+  const { data: allLand = [], isLoading } = useQuery({
+    queryKey: ['properties', 'land'],
+    queryFn: () => getPropertiesByCategory('land')
+  });
+
   const filteredListings = useMemo(() => {
-    return ALL_LAND.filter((listing) => {
+    return allLand.filter((listing) => {
       // Search
       if (search) {
         const query = search.toLowerCase();
@@ -70,7 +72,7 @@ export function LandPage() {
       
       return true;
     });
-  }, [search, propertyType, naStatus, ownership, budget]);
+  }, [search, propertyType, naStatus, ownership, budget, allLand]);
 
   const sidebar = (
     <>
@@ -105,13 +107,21 @@ export function LandPage() {
       onSearch={setSearch}
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredListings.map((listing) => (
-          <PropertyCard key={listing.id} listing={listing} />
-        ))}
-        {filteredListings.length === 0 && (
+        {isLoading ? (
           <div className="col-span-full py-20 text-center text-neutral-500">
-            No properties found matching your criteria. Try adjusting the filters.
+            Loading properties...
           </div>
+        ) : (
+          <>
+            {filteredListings.map((listing) => (
+              <PropertyCard key={listing.id} listing={listing} />
+            ))}
+            {filteredListings.length === 0 && (
+              <div className="col-span-full py-20 text-center text-neutral-500">
+                No properties found matching your criteria. Try adjusting the filters.
+              </div>
+            )}
+          </>
         )}
       </div>
     </ListingPageLayout>
