@@ -5,7 +5,7 @@ export interface Listing {
   price: string;
   title: string;
   location: string;
-  type: "Land" | "Apartment" | "Bungalow";
+  type: "Land" | "Apartment" | "Bungalow" | "Farm Land";
   verified: boolean;
   image: string;
   specs: string[];

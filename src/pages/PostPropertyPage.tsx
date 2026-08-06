@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { Building2, Home, Map as MapIcon, CheckCircle2, ChevronRight, MapPin, FileText, ArrowLeft, PhoneCall } from "lucide-react";
 
 const STEPS = ["Property Type", "Location", "Documents"];
