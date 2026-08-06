@@ -11,10 +11,14 @@ export function LanguageSelector() {
   const [open, setOpen] = useState(false);
   
   const getInitialLang = () => {
-    const match = document.cookie.match(/googtrans=\/en\/([a-z]{2})/);
-    const code = match ? match[1] : "en";
-    const found = LANGUAGES.find(l => l.code === code);
-    return found ? found.label : "English";
+    try {
+      const match = decodeURIComponent(document.cookie).match(/googtrans=\/en\/([a-z]{2})/);
+      const code = match ? match[1] : "en";
+      const found = LANGUAGES.find(l => l.code === code);
+      return found ? found.label : "English";
+    } catch {
+      return "English";
+    }
   };
 
   const [lang, setLang] = useState(getInitialLang());
@@ -24,14 +28,42 @@ export function LanguageSelector() {
     setLang(item.label);
     setOpen(false);
     
+    const domain = window.location.hostname;
+    const parts = domain.split('.');
+    const baseDomain = parts.length > 2 ? parts.slice(-2).join('.') : '';
+    
     if (item.code === "en") {
+      // Clear cookies across all possible domain variations
       document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
-    } else {
-      document.cookie = `googtrans=/en/${item.code}; path=/`;
-      document.cookie = `googtrans=/en/${item.code}; path=/; domain=${window.location.hostname}`;
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${domain}`;
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${domain}`;
+      if (baseDomain) {
+        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${baseDomain}`;
+      }
+      
+      // Reload is safest for English to restore original React DOM
+      window.location.reload();
+      return;
     }
-    window.location.reload();
+
+    // For other languages, set cookies thoroughly
+    const val = `/en/${item.code}`;
+    document.cookie = `googtrans=${val}; path=/`;
+    document.cookie = `googtrans=${val}; path=/; domain=${domain}`;
+    document.cookie = `googtrans=${val}; path=/; domain=.${domain}`;
+    if (baseDomain) {
+      document.cookie = `googtrans=${val}; path=/; domain=.${baseDomain}`;
+    }
+
+    // Try finding the Google Translate select dropdown to avoid a reload
+    const select = document.querySelector('.goog-te-combo') as HTMLSelectElement | null;
+    if (select) {
+      select.value = item.code;
+      select.dispatchEvent(new Event('change'));
+    } else {
+      // If the widget hasn't loaded yet, fall back to reload
+      window.location.reload();
+    }
   };
 
   useEffect(() => {
