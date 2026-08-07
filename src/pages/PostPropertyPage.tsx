@@ -72,6 +72,12 @@ export function PostPropertyPage() {
     }
   };
 
+  const whatsappMessage = encodeURIComponent(`Hi, I want to list my property.
+Property Type: ${propertyType}
+City: Belagavi
+Locality / Area: ${locality}
+Full Address: ${address}`);
+
   return (
     <div className="bg-neutral-50 min-h-screen pt-32 pb-20">
       <div className="max-w-3xl mx-auto px-5">
@@ -82,8 +88,8 @@ export function PostPropertyPage() {
             List Your Property
           </h1>
           
-          <div className="flex justify-between items-center relative">
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-neutral-200 rounded-full z-0">
+          <div className="flex relative">
+            <div className="absolute left-[16.66%] right-[16.66%] top-5 -translate-y-1/2 h-1 bg-neutral-200 rounded-full z-0">
               <div 
                 className="h-full bg-neutral-900 rounded-full transition-all duration-500 ease-in-out"
                 style={{ width: `${(step / (STEPS.length - 1)) * 100}%` }}
@@ -95,7 +101,7 @@ export function PostPropertyPage() {
               const isActive = idx === step;
               
               return (
-                <div key={s} className="relative z-10 flex flex-col items-center gap-2">
+                <div key={s} className="relative z-10 flex flex-col items-center gap-2 flex-1">
                   <div 
                     className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300
                       ${isActive ? 'bg-neutral-900 text-white shadow-lg ring-4 ring-neutral-900/10 scale-110' : 
@@ -246,7 +252,7 @@ export function PostPropertyPage() {
                       Contact our team directly on WhatsApp to submit your documents and finalize your listing.
                     </p>
                     <a 
-                      href="https://wa.me/919900000000" 
+                      href={`https://wa.me/919900000000?text=${whatsappMessage}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 bg-white text-neutral-900 font-bold px-8 py-4 rounded-full hover:scale-105 hover:shadow-xl transition-all duration-300 relative z-10"
