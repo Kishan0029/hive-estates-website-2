@@ -1,4 +1,5 @@
 
+import { Link } from "react-router-dom";
 import { useDraggableCarousel } from "../hooks/useDraggableCarousel";
 import { PropertyCard } from "./PropertyCard";
 import { CarouselArrow } from "./DraggableCarousel";
@@ -53,12 +54,12 @@ export function FeaturedLand() {
             <CarouselArrow direction="prev" onClick={scrollPrev} />
             <CarouselArrow direction="next" onClick={scrollNext} />
           </div>
-          <a
-            href="#"
+          <Link
+            to="/land"
             className="inline-flex items-center gap-2 shrink-0 rounded-full border border-neutral-300 px-6 py-3 text-sm font-semibold text-hive-ink hover:bg-hive-ink hover:text-white hover:border-hive-ink transition-colors"
           >
             View all land <ArrowUpRight />
-          </a>
+          </Link>
         </div>
       </div>
 

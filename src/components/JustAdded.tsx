@@ -1,4 +1,5 @@
 
+import { Link } from "react-router-dom";
 import { PropertyCard } from "./PropertyCard";
 import { useQuery } from "@tanstack/react-query";
 import { getPublicProperties } from "../lib/api";
@@ -43,12 +44,12 @@ export function JustAdded() {
           </h2>
         </div>
         <div>
-          <a
-            href="#"
+          <Link
+            to="/apartments"
             className="inline-flex items-center gap-2 shrink-0 rounded-full border border-neutral-300 px-6 py-3 text-sm font-semibold text-hive-ink hover:bg-hive-ink hover:text-white hover:border-hive-ink transition-colors"
           >
             Browse everything <ArrowUpRight />
-          </a>
+          </Link>
         </div>
       </div>
 

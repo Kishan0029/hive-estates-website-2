@@ -23,3 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Local sources & CLI cache
+knowledge src/
+supabase/.temp/

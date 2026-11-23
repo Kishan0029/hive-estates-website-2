@@ -1,4 +1,5 @@
 
+import { Link } from "react-router-dom";
 import { useDraggableCarousel } from "../hooks/useDraggableCarousel";
 import { PropertyCard } from "./PropertyCard";
 import { CarouselArrow } from "./DraggableCarousel";
@@ -54,30 +55,30 @@ export function FeaturedHomes() {
               <CarouselArrow direction="prev" onClick={scrollPrev} />
               <CarouselArrow direction="next" onClick={scrollNext} />
             </div>
-            <a
-              href="#"
+            <Link
+              to="/apartments"
               className="inline-flex items-center gap-2 shrink-0 rounded-full border border-neutral-300 px-6 py-3 text-sm font-semibold text-hive-ink hover:bg-hive-ink hover:text-white hover:border-hive-ink transition-colors"
             >
               View all homes <ArrowUpRight />
-            </a>
-          </div>
-        </div>
-
-        {/* Draggable card track */}
-        <div
-          ref={ref}
-          {...handlers}
-          className="scroll-container flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4 -mx-5 px-5 md:mx-0 md:px-0 scroll-pl-5 md:scroll-pl-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing select-none"
-        >
-          {isLoading ? (
-            <div className="w-full text-center py-10 text-neutral-500">Loading...</div>
-          ) : (
-            homeListings.map((listing) => (
-              <PropertyCard key={listing.id} listing={listing} carousel />
-            ))
-          )}
+          </Link>
         </div>
       </div>
-    </section>
+
+      {/* Draggable card track */}
+      <div
+        ref={ref}
+        {...handlers}
+        className="scroll-container flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4 -mx-5 px-5 md:mx-0 md:px-0 scroll-pl-5 md:scroll-pl-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing select-none"
+      >
+        {isLoading ? (
+          <div className="w-full text-center py-10 text-neutral-500">Loading...</div>
+        ) : (
+          homeListings.map((listing) => (
+            <PropertyCard key={listing.id} listing={listing} carousel />
+          ))
+        )}
+      </div>
+    </div>
+    </section >
   );
 }

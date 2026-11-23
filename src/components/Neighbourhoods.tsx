@@ -1,5 +1,7 @@
 
 
+import { Link } from "react-router-dom";
+
 const LOCALITIES = [
   {
     name: "Tilakwadi",
@@ -86,8 +88,8 @@ export function Neighbourhoods() {
                 loc.large ? "col-span-2 lg:col-span-1 lg:row-span-2 lg:h-full" : ""
               }
             >
-              <a
-                href="#"
+              <Link
+                to={`/apartments?search=${encodeURIComponent(loc.name)}`}
                 className="group relative block rounded-[24px] overflow-hidden cursor-pointer h-full"
               >
                 <img
@@ -112,7 +114,7 @@ export function Neighbourhoods() {
                     </span>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
           ))}
         </div>

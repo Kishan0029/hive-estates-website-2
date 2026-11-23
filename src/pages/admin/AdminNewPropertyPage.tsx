@@ -51,6 +51,10 @@ const schema = z.object({
   shopping: z.string().optional(),
   connectivity: z.string().optional(),
   road_width: optionalNumber,
+  address_line: z.string().optional().nullable(),
+  latitude: optionalNumber,
+  longitude: optionalNumber,
+  approved_banks: z.string().optional().nullable(),
 }).superRefine((data, ctx) => {
   if (!data.price_on_request && (!data.price || data.price <= 0)) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Price must be > 0 when not 'on request'", path: ["price"] });
@@ -195,6 +199,14 @@ export function AdminNewPropertyPage() {
               <input {...register("city")} className={inputCls} />
             </div>
             <div>
+              <Label>Address Line / Locality</Label>
+              <input {...register("address_line")} className={inputCls} placeholder="e.g. Sambra Road or Pant Balekundri" />
+            </div>
+            <div>
+              <Label>Approved Banks (comma-separated)</Label>
+              <input {...register("approved_banks")} className={inputCls} placeholder="e.g. SBI, HDFC, LIC HFL, Kotak" />
+            </div>
+            <div>
               <Label>Price (INR)</Label>
               <input type="number" {...register("price", { valueAsNumber: true })} disabled={priceOnRequest}
                 className={`${inputCls} ${priceOnRequest ? "opacity-50 cursor-not-allowed bg-neutral-50" : ""}`}
@@ -325,6 +337,14 @@ export function AdminNewPropertyPage() {
             <div className="md:col-span-2">
               <Label>Connectivity / Transit</Label>
               <input {...register("connectivity")} className={inputCls} placeholder="e.g. Railway Station (3 km), Bus Stand (2 km)" />
+            </div>
+            <div>
+              <Label>Approx Latitude</Label>
+              <input type="number" step="any" {...register("latitude", { valueAsNumber: true })} className={inputCls} placeholder="e.g. 15.8612" />
+            </div>
+            <div>
+              <Label>Approx Longitude</Label>
+              <input type="number" step="any" {...register("longitude", { valueAsNumber: true })} className={inputCls} placeholder="e.g. 74.6085" />
             </div>
           </div>
         </SectionCard>

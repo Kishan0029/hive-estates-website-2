@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { supabase, supabaseUrl } from "./supabase";
 
 export interface Listing {
   id: string;
@@ -8,8 +8,11 @@ export interface Listing {
   type: "Land" | "Apartment" | "Bungalow" | "Farm Land";
   verified: boolean;
   image: string;
+  images?: string[];
   specs: string[];
   slug?: string;
+  description?: string | null;
+  raw?: any;
 }
 
 export const formatINR = (n: number) => {
@@ -21,19 +24,20 @@ export const formatINR = (n: number) => {
 
 function resolveImageUrl(key: string): string {
   if (!key) return "/land-placeholder-1.png";
-  if (key.startsWith("http")) return key;
+  if (key.startsWith("http") || key.startsWith("/")) return key;
   const baseUrl = import.meta.env.VITE_R2_PUBLIC_BASE_URL;
   return baseUrl ? `${baseUrl}/${key}` : key;
 }
 
 function mapDbToFrontendProperty(row: any): Listing {
-  const images = row.property_images?.sort((a: any, b: any) => a.sort_order - b.sort_order) || [];
-  const imageUrl = images.length > 0 ? resolveImageUrl(images[0].r2_key) : "/land-placeholder-1.png";
+  const imageRows = row.property_images?.sort((a: any, b: any) => a.sort_order - b.sort_order) || [];
+  const imageUrls = imageRows.map((img: any) => resolveImageUrl(img.r2_key)).filter(Boolean);
+  const imageUrl = imageUrls.length > 0 ? imageUrls[0] : "/land-placeholder-1.png";
 
   const type = (row.property_type === "villa" ? "Bungalow" : row.property_type === "apartment" ? "Apartment" : row.property_type === "farmland" ? "Farm Land" : "Land") as any;
 
   const specs: string[] = [];
-  if (type !== "Land") {
+  if (type !== "Land" && type !== "Farm Land") {
     if (row.bhk) specs.push(`${row.bhk} Beds`);
     if (row.bathrooms) specs.push(`${row.bathrooms} Baths`);
     if (row.area_sqft) specs.push(`${row.area_sqft} sq.ft`);
@@ -45,16 +49,23 @@ function mapDbToFrontendProperty(row: any): Listing {
     if (row.na_status) specs.push(`${row.na_status} Plot`);
   }
 
+  const location = row.address_line
+    ? `${row.address_line}, ${row.city || "Belagavi"}`
+    : `${row.city || "Belagavi"}, Karnataka`.replace(/^, /, "");
+
   return {
     id: row.id,
     price: row.price_on_request ? "Price on Request" : formatINR(row.price || 0),
     title: row.title,
-    location: `${row.city || ""}, Karnataka`.replace(/^, /, ""),
+    location,
     type,
     verified: row.verified ?? true,
     image: imageUrl,
+    images: imageUrls.length > 0 ? imageUrls : [imageUrl],
     specs,
     slug: row.slug,
+    description: row.description,
+    raw: row,
   };
 }
 
@@ -231,7 +242,7 @@ export async function uploadImageToR2(file: File): Promise<string> {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) throw new Error("Not authenticated for upload");
 
-  const res = await fetch("https://naxjsxjsptqmszcfyuxw.supabase.co/functions/v1/generate-r2-upload-url", {
+  const res = await fetch(`${supabaseUrl}/functions/v1/generate-r2-upload-url`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -291,6 +302,10 @@ function buildPropertyPayload(data: any) {
     shopping: data.shopping || null,
     connectivity: data.connectivity || null,
     road_width: data.road_width ? Number(data.road_width) : null,
+    address_line: data.address_line || null,
+    latitude: data.latitude ? Number(data.latitude) : null,
+    longitude: data.longitude ? Number(data.longitude) : null,
+    approved_banks: data.approved_banks || null,
   };
 }
 
@@ -342,5 +357,25 @@ export async function getAdminInquiries(): Promise<AdminInquiry[]> {
 
 export async function markInquiryRead(id: string) {
   const { error } = await supabase.from("inquiries").update({ status: "read" }).eq("id", id);
+  if (error) throw error;
+}
+
+export interface CreateInquiryInput {
+  name: string;
+  phone: string;
+  email?: string | null;
+  message: string;
+  property_id?: string | null;
+}
+
+export async function createPublicInquiry(input: CreateInquiryInput): Promise<void> {
+  const { error } = await supabase.from("inquiries").insert([{
+    name: input.name.trim(),
+    phone: input.phone.trim(),
+    email: input.email?.trim() || null,
+    message: input.message.trim(),
+    property_id: input.property_id || null,
+    status: "new",
+  }]);
   if (error) throw error;
 }
